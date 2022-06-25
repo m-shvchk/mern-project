@@ -22,6 +22,8 @@
   },
   "homepage": "https://github.com/m-shvchk/mern-project#readme",
   "dependencies": {
-    "express": "^4.18.1"
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "mongoose": "^6.4.0"
   }
 }
