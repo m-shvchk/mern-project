@@ -2,7 +2,8 @@ import express from "express";
 const app = express();
 import dotenv from "dotenv";
 dotenv.config();
-
+import 'express-async-errors' // helps pass error to error handler middleware without try/catch + next() in the controller
+ 
 // db ans authenticate user
 
 import connectDB from "./db/connect.js"
