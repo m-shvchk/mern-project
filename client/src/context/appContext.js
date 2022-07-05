@@ -1,48 +1,62 @@
-import React, { useReducer, useContext } from 'react'
-import reducer from './reducer'
-import {DISPLAY_ALERT, CLEAR_ALERT} from './actions'
+import React, { useReducer, useContext } from "react";
+import reducer from "./reducer";
+import {
+  DISPLAY_ALERT,
+  CLEAR_ALERT,
+  REGISTER_USER_BEGIN,
+  REGISTER_USER_SUCCESS,
+  REGISTER_USER_ERROR,
+} from "./actions";
 
 export const initialState = {
-    isLoading: false,
-    showAlert: false,
-    alertText: '',
-    alertType: '',
-  }
-  const AppContext = React.createContext()
+  isLoading: false,
+  showAlert: false,
+  alertText: "",
+  alertType: "",
+  user: null,
+  token: null,
+  userLocation: "",
+};
+const AppContext = React.createContext();
 
-  const AppProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(reducer, initialState)
+const AppProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-    const displayAlert = () => {
+  const displayAlert = () => {
+    dispatch({
+      type: DISPLAY_ALERT,
+    });
+    clearAlert();
+  };
+
+  const clearAlert = () => {
+    setTimeout(() => {
       dispatch({
-        type: DISPLAY_ALERT,
-      })
-      clearAlert()
-    }
-    
-    const clearAlert = () => {
-      setTimeout(() => {
-        dispatch({
-          type: CLEAR_ALERT,
-        })
-      }, 3000)
-    }
-  
-    return (
-      <AppContext.Provider
-        value={{
-          ...state,
-          displayAlert
-        }}
-      >
-        {children}
-      </AppContext.Provider>
-    )
+        type: CLEAR_ALERT,
+      });
+    }, 3000);
+  };
+
+  const registerUser = async (currentUser) => {
+    console.log(currentUser)
   }
-  // custom hook to avoid importing const ctx = useContext(AppContext) 
-  // in every component where we use context:
-  export const useAppContext = () => {
-    return useContext(AppContext)
-  }
-  
-  export { AppProvider }
+
+  return (
+    <AppContext.Provider
+      value={{
+        ...state,
+        displayAlert,
+        registerUser,
+      }}
+    >
+      {children}
+    </AppContext.Provider>
+  );
+};
+// custom hook to avoid importing const ctx = useContext(AppContext)
+// in every component where we use context:
+export const useAppContext = () => {
+  return useContext(AppContext);
+};
+
+export { AppProvider };
