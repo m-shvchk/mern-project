@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Logo, FormRow, Alert } from "../components";
 import styled from "styled-components";
 import { useAppContext } from "../context/appContext";
+import { useNavigate } from 'react-router-dom';
 
 // global context and useNavigate later
 
@@ -14,7 +15,8 @@ const initialState = {
 
 const Register = () => {
   const [values, setValues] = useState(initialState);
-  const { isLoading, showAlert, displayAlert, registerUser } = useAppContext();
+  const navigate = useNavigate()
+  const {user, isLoading, showAlert, displayAlert, registerUser } = useAppContext();
 
   const toggleMember = () => {
     setValues((prevState) => {
@@ -24,7 +26,7 @@ const Register = () => {
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
-    console.log(e.target.name, e.target.value);
+    // console.log(e.target.name, e.target.value);
   };
 
   const onSubmit = (e) => {
@@ -46,7 +48,13 @@ const Register = () => {
     });
   };
 
-  // global context and useNavigate later
+  useEffect(() => { // if user is not null programatically navigate to dashboard
+    if (user) {
+      setTimeout(() => {
+        navigate('/')
+      }, 3000) // timeout is because of 3sec alert (optional)
+    }
+  }, [user, navigate])
 
   return (
     <Wrapper className="full-page">
