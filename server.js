@@ -4,7 +4,9 @@ const app = express();
 import dotenv from "dotenv";
 dotenv.config();
 import 'express-async-errors' // helps pass error to error handler middleware without try/catch + next() in the controller
- 
+
+import morgan from 'morgan' // HTTP request logger middleware for node.js
+
 // db ans authenticate user
 
 import connectDB from "./db/connect.js"
@@ -21,6 +23,11 @@ import notFoundMiddleware from "./middleware/not-found.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
 
 // app.use(cors()) // applying CORS package as a middleware
+
+if (process.env.NODE_ENV !== 'production') { // we don't need morgan package in production
+  app.use(morgan('dev')) // :method :url :status :response-time ms - :res[content-length]
+}
+
 app.use(express.json())
 
 app.get("/", (req, res) => { // dummy route
