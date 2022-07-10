@@ -4,8 +4,6 @@ import styled from "styled-components";
 import { useAppContext } from "../context/appContext";
 import { useNavigate } from 'react-router-dom';
 
-// global context and useNavigate later
-
 const initialState = {
   name: "",
   email: "",
@@ -16,7 +14,7 @@ const initialState = {
 const Register = () => {
   const [values, setValues] = useState(initialState);
   const navigate = useNavigate()
-  const {user, isLoading, showAlert, displayAlert, registerUser } = useAppContext();
+  const {user, isLoading, showAlert, displayAlert, registerUser, loginUser } = useAppContext();
 
   const toggleMember = () => {
     setValues((prevState) => {
@@ -38,7 +36,7 @@ const Register = () => {
     }
     const currentUser = {name, email, password};
     if(isMember) {
-      console.log('Already a member')
+      loginUser(currentUser)
     } else{
       registerUser(currentUser)
     }
