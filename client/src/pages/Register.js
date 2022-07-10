@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Logo, FormRow, Alert } from "../components";
 import styled from "styled-components";
 import { useAppContext } from "../context/appContext";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const initialState = {
   name: "",
@@ -13,8 +13,9 @@ const initialState = {
 
 const Register = () => {
   const [values, setValues] = useState(initialState);
-  const navigate = useNavigate()
-  const {user, isLoading, showAlert, displayAlert, registerUser, loginUser } = useAppContext();
+  const navigate = useNavigate();
+  const { user, isLoading, showAlert, displayAlert, setupUser } =
+    useAppContext();
 
   const toggleMember = () => {
     setValues((prevState) => {
@@ -34,25 +35,30 @@ const Register = () => {
       displayAlert();
       return;
     }
-    const currentUser = {name, email, password};
-    if(isMember) {
-      loginUser(currentUser)
-    } else{
-      registerUser(currentUser)
+    const currentUser = { name, email, password };
+    if (isMember) {
+      setupUser({
+        currentUser,
+        endPoint: "login",
+        alertText: "Login Successful! Redirecting...",
+      });
+    } else {
+      setupUser({
+        currentUser,
+        endPoint: "register",
+        alertText: "User Created! Redirecting...",
+      });
     }
-        
-    setValues((prevState) => {
-      return { ...prevState, name: "", email: "", password: "" };
-    });
   };
 
-  useEffect(() => { // if user is not null programatically navigate to dashboard
+  useEffect(() => {
+    // if user is not null programatically navigate to dashboard
     if (user) {
       setTimeout(() => {
-        navigate('/')
-      }, 3000) // timeout is because of 3sec alert (optional)
+        navigate("/");
+      }, 3000); // timeout is because of 3sec alert (optional)
     }
-  }, [user, navigate])
+  }, [user, navigate]);
 
   return (
     <Wrapper className="full-page">
