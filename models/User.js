@@ -42,7 +42,10 @@ const UserSchema = new mongoose.Schema({
 
 // before we save document we going to run functionality (hashing password):
 UserSchema.pre("save", async function () {
-  // console.log(this.password)
+  // console.log(this.modifiedPaths()) // which values are we updating: ['name'] if name changes
+  // console.log(this.isModified('name')) // true/false
+
+  if (!this.isModified('password')) return // !!! If we don't change password, we should not try to encrypt it !!!
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
   // "this" points to instance created by UserSchema

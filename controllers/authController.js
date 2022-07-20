@@ -17,43 +17,64 @@ const register = async (req, res) => {
 
   const user = await User.create({ name, email, password });
   const token = user.createJWT();
-  res
-    .status(StatusCodes.CREATED)
-    .json({
-      user: { // to avoid sending the password back to the frontend we specify what properties of the user we want to send (select: false in the model does not work with User.create()):
-        email: user.email,
-        lastName: user.lastName,
-        location: user.location,
-        name: user.name,
-      },
-      token,
+  res.status(StatusCodes.CREATED).json({
+    user: {
+      // to avoid sending the password back to the frontend we specify what properties of the user we want to send (select: false in the model does not work with User.create()):
+      email: user.email,
+      lastName: user.lastName,
       location: user.location,
-    });
+      name: user.name,
+    },
+    token,
+    location: user.location,
+  });
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body
+  const { email, password } = req.body;
   if (!email || !password) {
-    throw new BadRequestError('Please provide all values')
+    throw new BadRequestError("Please provide all values");
   }
-  const user = await User.findOne({ email }).select('+password') // !!! "+password" -> password is excluded from findOne() query because of 'select: false' in User schema, but we need password to comparison - error "Illegal arguments: string, undefined" !!!
-  console.log(user)
+  const user = await User.findOne({ email }).select("+password"); // !!! "+password" -> password is excluded from findOne() query because of 'select: false' in User schema, but we need password to comparison - error "Illegal arguments: string, undefined" !!!
+  console.log(user);
 
   if (!user) {
-    throw new UnauthenticatedError('Invalid Credentials')
+    throw new UnauthenticatedError("Invalid Credentials");
   }
-  const isPasswordCorrect = await user.comparePassword(password)
+  const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {
-    throw new UnauthenticatedError('Invalid Credentials')
+    throw new UnauthenticatedError("Invalid Credentials");
   }
-  const token = user.createJWT()
-  user.password = undefined // to avoid sending password in the response 
-  res.status(StatusCodes.OK).json({ user, token, location: user.location })
-}
+  const token = user.createJWT();
+  user.password = undefined; // to avoid sending password in the response
+  res.status(StatusCodes.OK).json({ user, token, location: user.location });
+};
 
 const updateUser = async (req, res) => {
-  console.log(req.user) // {userId: '...'}
-  res.send("update user");
+  // console.log(req.user) // {userId: '...'}
+
+  const { email, name, lastName, location } = req.body;
+  if (!email || !name || !lastName || !location) {
+    // lastName andlocation have default values
+    throw new BadRequestError("Please provide all values");
+  }
+
+  const user = await User.findOne({ _id: req.user.userId }); // grab the user by id
+
+  // updating values in DB:
+  user.email = email;
+  user.name = name;
+  user.lastName = lastName;
+  user.location = location;
+
+  await user.save();
+  const token = user.createJWT(); // create new jwt token (not necessary, but updates expiration time)
+  
+  res.status(StatusCodes.OK).json({
+    user,
+    token,
+    location: user.location,
+  });
 };
 
 export { register, login, updateUser };
