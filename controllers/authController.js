@@ -52,6 +52,7 @@ const login = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
+  console.log(req.user) // {userId: '...'}
   res.send("update user");
 };
 
