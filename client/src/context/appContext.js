@@ -61,7 +61,10 @@ const AppProvider = ({ children }) => {
   const setupUser = async ({ currentUser, endPoint, alertText }) => {
     dispatch({ type: SETUP_USER_BEGIN });
     try {
-      const {data} = await axios.post(`/api/v1/auth/${endPoint}`, currentUser);
+      const { data } = await axios.post(
+        `/api/v1/auth/${endPoint}`,
+        currentUser
+      );
 
       const { user, token, location } = data;
       dispatch({
@@ -86,16 +89,55 @@ const AppProvider = ({ children }) => {
   };
 
   const toggleSidebar = () => {
-    dispatch({ type: TOGGLE_SIDEBAR })
-  }
+    dispatch({ type: TOGGLE_SIDEBAR });
+  };
   const logoutUser = () => {
-    dispatch({ type: LOGOUT_USER })
-    removeUserFromLocalStorage()
-  }
+    dispatch({ type: LOGOUT_USER });
+    removeUserFromLocalStorage();
+  };
+
+  // AXIOS INSTANCE
+  const authFetch = axios.create({
+    baseURL: "/api/v1",
+  });
+  // https://axios-http.com/docs/interceptors
+  // REQUEST INTERCEPTOR
+  authFetch.interceptors.request.use(
+    (config) => {
+      // inside the function - code that runs before request is sent
+      config.headers.common["Authorization"] = `Bearer ${state.token}`; // add auth header
+      return config;
+    },
+    (error) => {
+      // Do something with request error
+      return Promise.reject(error);
+    }
+  );
+  // RESPONSE INTERCEPTOR
+  authFetch.interceptors.response.use(
+    (response) => {
+      // Any status code that lie within the range of 2xx cause this function to trigger
+      // Do something with response data
+      return response;
+    },
+    (error) => {
+      console.log(error.response);
+      // Any status codes that falls outside the range of 2xx cause this function to trigger
+      // Do something with response error
+      if (error.response.status === 401) {
+        console.log("AUTH ERROR");
+      }
+      return Promise.reject(error);
+    }
+  );
 
   const updateUser = async (currentUser) => {
-    console.log(currentUser)
-  }
+    try {
+      const { data } = await authFetch.patch("/auth/updateUser", currentUser);
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
 
   return (
     <AppContext.Provider

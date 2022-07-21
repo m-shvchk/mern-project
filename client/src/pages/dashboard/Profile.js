@@ -13,10 +13,10 @@ const Profile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!name || !email || !lastName || !location) {
-      displayAlert();
-      return;
-    }
+    // if (!name || !email || !lastName || !location) {
+    //   displayAlert();
+    //   return;
+    // }
 
     updateUser({ name, email, lastName, location });
   };
@@ -26,7 +26,6 @@ const Profile = () => {
         <h3>profile </h3>
         {showAlert && <Alert />}
 
-        {/* name */}
         <div className="form-center">
           <FormRow
             type="text"
