@@ -124,36 +124,38 @@ const AppProvider = ({ children }) => {
       return response;
     },
     (error) => {
-      console.log(error.response);
+      // console.log(error.response);
       // Any status codes that falls outside the range of 2xx cause this function to trigger
       // Do something with response error
       if (error.response.status === 401) {
-        console.log("AUTH ERROR");
+        logoutUser();
       }
       return Promise.reject(error);
     }
   );
 
   const updateUser = async (currentUser) => {
-    dispatch({ type: UPDATE_USER_BEGIN })
+    dispatch({ type: UPDATE_USER_BEGIN });
     try {
-      const { data } = await authFetch.patch('/auth/updateUser', currentUser)
-      const { user, location, token } = data
-  
+      const { data } = await authFetch.patch("/auth/updateUser", currentUser);
+      const { user, location, token } = data;
+
       dispatch({
         type: UPDATE_USER_SUCCESS,
         payload: { user, location, token },
-      })
-  
-      addUserToLocalStorage({ user, location, token })
+      });
+
+      addUserToLocalStorage({ user, location, token });
     } catch (error) {
-      dispatch({
-        type: UPDATE_USER_ERROR,
-        payload: { msg: error.response.data.msg },
-      })
+      if (error.response.status !== 401) { // if we get 401 - just logout the user, we don't need 3 second alert  
+        dispatch({
+          type: UPDATE_USER_ERROR,
+          payload: { msg: error.response.data.msg },
+        });
+      }
     }
-    clearAlert()
-  }
+    clearAlert();
+  };
 
   return (
     <AppContext.Provider
