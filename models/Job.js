@@ -29,7 +29,7 @@ const JobSchema = new mongoose.Schema(
       required: true,
     },
     createdBy: {
-      type: mongoose.Types.ObjectId, // refrence to the concrete user with id
+      type: mongoose.Types.ObjectId, // objectId - special type typically used for unique identifiers
       ref: 'User', // reference to User Schema
       required: [true, 'Please provide user'],
     },
