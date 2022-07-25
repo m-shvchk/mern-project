@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { FormRow, Alert } from "../../components";
+import { FormRow, Alert, FormRowSelect } from "../../components";
 import { useAppContext } from "../../context/appContext";
 
 const AddJob = () => {
@@ -61,10 +61,25 @@ const AddJob = () => {
             value={jobLocation}
             handleChange={handleJobInput}
           />
-          {/* job type */}
 
           {/* job status */}
+          <FormRowSelect
+            name="status"
+            value={status}
+            handleChange={handleJobInput}
+            list={statusOptions}
+          />
 
+          {/* job type */}
+          <FormRowSelect
+            labelText="job type"
+            name="jobType"
+            value={jobType}
+            handleChange={handleJobInput}
+            list={jobTypeOptions}
+          />
+
+          {/* button container */}
           <div className="btn-container">
             <button
               className="btn btn-block submit-btn"
