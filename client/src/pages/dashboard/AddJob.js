@@ -15,6 +15,7 @@ const AddJob = () => {
     status,
     statusOptions,
     handleChange,
+    clearValues,
   } = useAppContext();
 
   const handleSubmit = (e) => {
@@ -82,12 +83,23 @@ const AddJob = () => {
 
           {/* button container */}
           <div className="btn-container">
+            {/* submit button -> should be placed first (for 'enter' key) */}
             <button
               className="btn btn-block submit-btn"
               type="submit"
               onClick={handleSubmit}
             >
               submit
+            </button>
+            {/* clear button */}
+            <button
+              className="btn btn-block clear-btn"
+              onClick={(e) => {
+                e.preventDefault(); // otherwise triggers reload 
+                clearValues();
+              }}
+            >
+              clear
             </button>
           </div>
         </div>
