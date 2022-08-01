@@ -16,7 +16,7 @@ const register = async (req, res) => {
   }
 
   const user = await User.create({ name, email, password });
-  const token = user.createJWT();
+  const token = user.createJWT(); // instance method created in User Schema
   res.status(StatusCodes.CREATED).json({
     user: {
       // to avoid sending the password back to the frontend we specify what properties of the user we want to send (select: false in the model does not work with User.create()):

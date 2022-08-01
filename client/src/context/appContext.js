@@ -17,6 +17,8 @@ import {
   CREATE_JOB_BEGIN,
   CREATE_JOB_SUCCESS,
   CREATE_JOB_ERROR,
+  GET_JOBS_BEGIN,
+  GET_JOBS_SUCCESS,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -41,6 +43,10 @@ export const initialState = {
   jobType: 'full-time',
   statusOptions: ['pending', 'interview', 'declined'],
   status: 'pending',
+  jobs: [],
+  totalJobs: 0,
+  numOfPages: 1,
+  page: 1,
 };
 const AppContext = React.createContext();
 
@@ -208,6 +214,27 @@ const AppProvider = ({ children }) => {
     clearAlert()
   }
 
+  const getJobs = async () => {
+    let url = `/jobs`
+    dispatch({ type: GET_JOBS_BEGIN })
+    try {
+      const { data } = await authFetch(url)
+      const { jobs, totalJobs, numOfPages } = data
+      dispatch({
+        type: GET_JOBS_SUCCESS,
+        payload: {
+          jobs,
+          totalJobs,
+          numOfPages,
+        },
+      })
+    } catch (error) { // possible errors: 401 (unauthenticated) or 500 (server error). if such errors occur - just log out 
+      console.log(error.response)
+      // logoutUser() // comented out while developping
+    }
+    clearAlert() // precaution -> because of 3sec deley we can see alert from add job if change pages quickly
+  }
+  
   return (
     <AppContext.Provider
       value={{
@@ -220,6 +247,7 @@ const AppProvider = ({ children }) => {
         handleChange,
         clearValues,
         createJob,
+        getJobs,
       }}
     >
       {children}

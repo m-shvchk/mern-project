@@ -51,13 +51,16 @@ UserSchema.pre("save", async function () {
   // "this" points to instance created by UserSchema
 });
 
+// create the instance method 'createJWT' (called in registerUser and loginUser controllers):
 UserSchema.methods.createJWT = function () {
   // console.log(this) // this points to the document (instance of UserSchema)
+  // jwt.sign(payload - id(identifier), secret (https://www.allkeysgenerator.com/ -> 256, encription key), options(expires in)):
   return jwt.sign({ userId: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_LIFETIME,
   });
 };
 
+// instance method for compare passwords (called in login user controller):
 UserSchema.methods.comparePassword = async function (candidatePassword) {
   const isMatch = await bcrypt.compare(candidatePassword, this.password)
   return isMatch
