@@ -28,7 +28,7 @@ const JobsContainer = () => {
         </h5>
         <div className='jobs'>
           {jobs.map((job) => {
-            return <Job key={job._id} {...job} />
+            return <Job key={job._id} {...job} /> // _id -> from MongoDB document passed into state, {...job} -> all other properties in the jobs state
           })}
         </div>
       </Wrapper>
