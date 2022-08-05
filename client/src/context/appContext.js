@@ -19,6 +19,7 @@ import {
   CREATE_JOB_ERROR,
   GET_JOBS_BEGIN,
   GET_JOBS_SUCCESS,
+  SET_EDIT_JOB,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -235,10 +236,14 @@ const AppProvider = ({ children }) => {
     clearAlert() // precaution -> because of 3sec deley we can see alert from add job if change pages quickly
   }
 
-  const setEditJob = (id) => { // after editJob, updates values in state: 
-    console.log(`set edit job : ${id}`)
+  const setEditJob = (id) => { // sets selected job for editing (changes state and redirects to add job (in Job.js)): 
+    dispatch({ type: SET_EDIT_JOB, payload: { id } })
   }
-  
+
+  const editJob = () => {
+    console.log('edit job')
+  }
+
   const deleteJob = (id) =>{
     console.log(`delete : ${id}`)
   }
@@ -258,6 +263,7 @@ const AppProvider = ({ children }) => {
         getJobs,
         setEditJob,
         deleteJob,
+        editJob,
       }}
     >
       {children}
