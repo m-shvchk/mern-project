@@ -51,11 +51,20 @@ const getAllJobs = async (req, res) => {
   if (sort === 'z-a') {
     result = result.sort('-position')
   }
+
+    // setup pagination
+    const page = Number(req.query.page) || 1
+    const limit = Number(req.query.limit) || 10
+    const skip = (page - 1) * limit // (10)
+    result = result.skip(skip).limit(limit)
+
   const jobs = await result
 
-  res
-    .status(StatusCodes.OK)
-    .json({ jobs, totalJobs: jobs.length, numOfPages: 1 })
+  // jobs.length cannot be used to calculate totalJobs, because it will always reflect the limit (10):
+  const totalJobs = await Job.countDocuments(queryObject) // we can pass queryObject directly to countDocuments method; 
+  const numOfPages = Math.ceil(totalJobs / limit)
+
+  res.status(StatusCodes.OK).json({ jobs, totalJobs, numOfPages })
 }
 
 const updateJob = async (req, res) => {
