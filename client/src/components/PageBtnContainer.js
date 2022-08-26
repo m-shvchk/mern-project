@@ -1,33 +1,50 @@
-import { useAppContext } from '../context/appContext'
-import { HiChevronDoubleLeft, HiChevronDoubleRight } from 'react-icons/hi'
-import styled from 'styled-components'
+import { useAppContext } from "../context/appContext";
+import { HiChevronDoubleLeft, HiChevronDoubleRight } from "react-icons/hi";
+import styled from "styled-components";
 
 const PageButtonContainer = () => {
-  const { numOfPages, page } = useAppContext()
+  const { numOfPages, page } = useAppContext();
+
+  const pages = Array.from({ length: numOfPages }, (_, index) => {
+    return index + 1;
+  }); // making array of n = numOfPages items, and fill it with indices + 1 (num of pages)
 
   const prevPage = () => {
-    console.log('prev page')
-  }
+    console.log("prev page");
+  };
   const nextPage = () => {
-    console.log('next page')
-  }
+    console.log("next page");
+  };
 
   return (
     <Wrapper>
-      <button className='prev-btn' onClick={prevPage}>
+      <button className="prev-btn" onClick={prevPage}>
         <HiChevronDoubleLeft />
         prev
       </button>
 
-      <div className='btn-container'>buttons</div>
-
-      <button className='next-btn' onClick={nextPage}>
+      {/* rendering buttons for every available page */}  
+      <div className="btn-container">
+        {pages.map((pageNumber) => {
+          return (
+            <button
+              type="button"
+              className={pageNumber === page ? "pageBtn active" : "pageBtn"}
+              key={pageNumber}
+              onClick={() => console.log(page)}
+            >
+              {pageNumber}
+            </button>
+          );
+        })}
+      </div>
+      <button className="next-btn" onClick={nextPage}>
         next
         <HiChevronDoubleRight />
       </button>
     </Wrapper>
-  )
-}
+  );
+};
 
 const Wrapper = styled.section`
   height: 6rem;
@@ -79,6 +96,6 @@ const Wrapper = styled.section`
     background: var(--primary-500);
     color: var(--white);
   }
-`
+`;
 
-export default PageButtonContainer
+export default PageButtonContainer;
