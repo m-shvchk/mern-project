@@ -4,6 +4,8 @@ import { useAppContext } from '../context/appContext'
 import { useEffect } from 'react'
 import Loading from './Loading'
 import Job from './Job'
+import PageBtnContainer from './PageBtnContainer'
+
 
 const JobsContainer = () => {
   const {
@@ -16,6 +18,7 @@ const JobsContainer = () => {
     searchStatus,
     searchType,
     sort,
+    numOfPages,
 
   } = useAppContext()
   useEffect(() => {
@@ -42,6 +45,7 @@ const JobsContainer = () => {
             return <Job key={job._id} {...job} /> // _id -> from MongoDB document passed into state, {...job} -> all other properties in the jobs state
           })}
         </div>
+        {numOfPages > 1 && <PageBtnContainer />}
       </Wrapper>
     )
   }
