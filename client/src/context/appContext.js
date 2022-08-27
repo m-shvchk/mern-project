@@ -27,6 +27,7 @@ import {
   SHOW_STATS_BEGIN,
   SHOW_STATS_SUCCESS,
   CLEAR_FILTERS,
+  CHANGE_PAGE,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -317,6 +318,10 @@ clearAlert()
   const clearFilters = () => {
     dispatch({ type: CLEAR_FILTERS })
   }
+
+  const changePage = (page) => {
+    dispatch({ type: CHANGE_PAGE, payload: { page } })
+  }
   
   return (
     <AppContext.Provider
@@ -336,6 +341,7 @@ clearAlert()
         editJob,
         showStats,
         clearFilters,
+        changePage,
       }}
     >
       {children}
