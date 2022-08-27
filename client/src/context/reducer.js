@@ -118,8 +118,8 @@ const reducer = (state, action) => {
   }
 
   if (action.type === HANDLE_CHANGE) {
-    return { ...state, [action.payload.name]: action.payload.value };
-  }
+    return { ...state, page: 1, [action.payload.name]: action.payload.value }  
+  } // 'page: 1' is important, because while making a search or filter we should start from page 1
 
   if (action.type === CLEAR_VALUES) {
     const initialState = {

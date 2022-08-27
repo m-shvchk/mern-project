@@ -232,9 +232,9 @@ const AppProvider = ({ children }) => {
 
   const getJobs = async () => {
     //
-    const { search, searchStatus, searchType, sort } = state
-  let url = `/jobs?status=${searchStatus}&jobType=${searchType}&sort=${sort}`
-  if (search) {
+    const { page, search, searchStatus, searchType, sort } = state
+    let url = `/jobs?page=${page}&status=${searchStatus}&jobType=${searchType}&sort=${sort}`
+    if (search) {
     url = url + `&search=${search}`
   }
   dispatch({ type: GET_JOBS_BEGIN })
