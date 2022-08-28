@@ -1,10 +1,8 @@
 import styled from "styled-components";
-import { useAppContext } from "../../context/appContext";
 import { Outlet } from "react-router-dom"; // Outlet component allows nested UI to show up when child routes are rendered
 import { Navbar, SmallSidebar, BigSidebar } from "../../components";
 
 const SharedLayout = () => {
-  const { user } = useAppContext();
   return (
     <>
       <Wrapper>

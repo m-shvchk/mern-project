@@ -251,7 +251,7 @@ const AppProvider = ({ children }) => {
       })
     } catch (error) { // possible errors: 401 (unauthenticated) or 500 (server error). if such errors occur - just log out 
       console.log(error.response)
-      // logoutUser() // !!! comented out while developping !!!
+      logoutUser() // !!! comented out while developping !!!
     }
     clearAlert() // precaution -> because of 3sec deley we can see alert from add job if change pages quickly
   }
@@ -292,7 +292,7 @@ const AppProvider = ({ children }) => {
       await authFetch.delete(`/jobs/${jobId}`)
       getJobs() // we are deleting job from the bd, so we need to update jobs on frontend 
     } catch (error) {
-      // logoutUser() // !!! comented out while developping !!!
+      logoutUser() // !!! comented out while developping !!!
     }
   }
 
@@ -308,8 +308,7 @@ const AppProvider = ({ children }) => {
         },
       })
     } catch (error) {
-console.log(error.response)
-      // logoutUser()
+      logoutUser()
     }
 
 clearAlert()

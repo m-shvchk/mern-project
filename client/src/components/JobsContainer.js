@@ -21,8 +21,10 @@ const JobsContainer = () => {
     numOfPages,
 
   } = useAppContext()
+
   useEffect(() => {
     getJobs()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ page, search, searchStatus, searchType, sort])
   
     if (isLoading) {
