@@ -9,6 +9,10 @@ import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import path from 'path'
 
+import helmet from 'helmet'
+import xss from 'xss-clean'
+import mongoSanitize from 'express-mongo-sanitize'
+
 // db ans authenticate user
 import connectDB from "./db/connect.js"
 // !!! to use ES6 module import/export we should add "type": "module" in package.json and then use full name of the imported file (with .js extension)
@@ -29,6 +33,10 @@ if (process.env.NODE_ENV !== 'production') { // we don't need morgan package in 
 const __dirname = dirname(fileURLToPath(import.meta.url)) // a workaround (__dirname is not available by default in es6 modules)
 
 app.use(express.json())
+app.use(helmet())
+app.use(xss())
+app.use(mongoSanitize())
+
 app.use(express.static(path.resolve(__dirname, './client/build'))) //only when ready to deploy
 
 app.use('/api/v1/auth', authRouter)
